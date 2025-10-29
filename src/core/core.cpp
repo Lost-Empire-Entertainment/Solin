@@ -4,16 +4,18 @@
 //Read LICENSE.md for more information.
 
 #include <filesystem>
-#include <vector>
 #include <string>
+#include <vector>
+#include <sstream>
 
 #include "KalaHeaders/log_utils.hpp"
 
 #include "KalaWindow/include/core/core.hpp"
 #include "KalaWindow/include/core/crash.hpp"
+#include "KalaWindow/include/ui/font.hpp"
+#include "KalaWindow/include/ui/import_kfont.hpp"
 
 #include "core/core_program.hpp"
-#include "core/import_kfont.hpp"
 #include "graphics/render.hpp"
 
 using KalaHeaders::Log;
@@ -21,16 +23,16 @@ using KalaHeaders::LogType;
 
 using KalaWindow::Core::KalaWindowCore;
 using KalaWindow::Core::CrashHandler;
-
-using KalaFont::ImportKalaFont;
+using KalaWindow::UI::Font;
 using KalaFont::GlyphResult;
 
 using Solin::Graphics::Render;
 
 using std::filesystem::path;
 using std::filesystem::current_path;
+using std::string;
 using std::vector;
-using std::to_string;
+using std::ostringstream;
 
 namespace Solin::Core
 {
@@ -41,19 +43,26 @@ namespace Solin::Core
 			Shutdown);
 			
 		path fontPath = current_path() / "files" / "fonts" / "bw.kfont";
-		vector<GlyphResult> result{};
 		
-		if (!ImportKalaFont(fontPath, result))
+		string fontName = "bitwise";
+		Font* font = Font::LoadFont(fontName, fontPath.string());
+		
+		if (font)
 		{
-			KalaWindowCore::ForceClose(
-				"Font error",
-				"Failed to load font from path '" + fontPath.string() + "'!");
+			vector<GlyphResult>& result = font->GetGlyphData();
+			
+			ostringstream oss{};
+			
+			oss << "there are '" << result.size() << "' glyphs in font '" << fontName << "'\n";
+			
+			for (int i = 0; i < result.size(); ++i)
+			{
+				oss << "[" << i << "] vertices: " << result[i].vertices.size() 
+				<< " indices: " << result[i].indices.size() << " indices\n";
+			}
+			
+			Log::Print(oss.str());
 		}
-		
-		Log::Print(
-			"Loaded '" + to_string(result.size()) + "' glyphs from font '" + fontPath.string() + "'!",
-			"LOAD_KFONT",
-			LogType::LOG_SUCCESS);
 		
 		Render::Initialize();
 	}
