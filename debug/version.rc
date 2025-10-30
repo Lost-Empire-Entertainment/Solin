@@ -28,20 +28,20 @@ BEGIN
         BLOCK "040904b0" //US English + Unicode
         BEGIN
 			//Public fields
-			VALUE "FileDescription",  "Solin IDE"
+			VALUE "FileDescription",  "Solin"
 			VALUE "FileVersion",      "2026.1.0.0"
-			VALUE "ProductName",      "Solin IDE"
+			VALUE "ProductName",      "Solin"
 			VALUE "ProductVersion",   "2026.1.0.0"
 			VALUE "CompanyName",      "Lost Empire Entertainment"
 			VALUE "LegalCopyright",   "(C) 2025 Lost Empire Entertainment"
 			VALUE "LegalTrademarks",  "Trademark of Lost Empire Entertainment"
-			VALUE "OriginalFilename", "Solin IDE"
+			VALUE "OriginalFilename", "Solin"
 			
 			//Private fields
-			VALUE "InternalName",     "Solin IDE"
-			VALUE "Comments",         "Solin IDE"
-			VALUE "PrivateBuild",     "Solin IDE"
-			VALUE "SpecialBuild",     "Solin IDE"
+			VALUE "InternalName",     "Solin"
+			VALUE "Comments",         "Solin"
+			VALUE "PrivateBuild",     "Solin"
+			VALUE "SpecialBuild",     "Solin"
         END
     END
     BLOCK "VarFileInfo"

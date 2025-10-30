@@ -4,8 +4,8 @@ Copyright (c) 2025 **Lost Empire Entertainment**
 
 ## Definitions
 - **The Company** refers to **Lost Empire Entertainment**.  
-- **The Repository** refers to the Solin IDE source code repository and all content it contains.
-- **IDE** refers to the Solin IDE executable.
+- **The Repository** refers to the Solin source code repository and all content it contains.
+- **IDE** refers to the Solin executable.
 - **User-Created Work** refers to any code or text created using **The IDE**.  
 
 ## 1. Scope
