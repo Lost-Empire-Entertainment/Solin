@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <sstream>
 
 #include "KalaHeaders/log_utils.hpp"
 #include "KalaHeaders/math_utils.hpp"
@@ -21,7 +22,11 @@
 #include "KalaWindow/include/graphics/opengl/opengl_shader.hpp"
 #include "KalaWindow/include/graphics/opengl/opengl_functions_core.hpp"
 #include "KalaWindow/include/graphics/opengl/shaders/shader_quad.hpp"
+#include "KalaWindow/include/graphics/opengl/shaders/shader_text.hpp"
 #include "KalaWindow/include/ui/image.hpp"
+#include "KalaWindow/include/ui/font.hpp"
+#include "KalaWindow/include/ui/text.hpp"
+#include "KalaWindow/include/utils/transform2d.hpp"
 
 #include "graphics/render.hpp"
 
@@ -49,12 +54,22 @@ using KalaWindow::Graphics::OpenGL::ShaderType;
 using KalaWindow::Graphics::OpenGL::VSyncState;
 using KalaWindow::Graphics::OpenGL::Shader::shader_quad_vertex;
 using KalaWindow::Graphics::OpenGL::Shader::shader_quad_fragment;
+using KalaWindow::Graphics::OpenGL::Shader::shader_text_vertex;
+using KalaWindow::Graphics::OpenGL::Shader::shader_text_fragment;
 using namespace KalaWindow::Graphics::OpenGLFunctions;
 using KalaWindow::UI::Image;
+using KalaWindow::UI::Font;
+using KalaWindow::UI::Text;
+using KalaWindow::Utils::Transform2D;
+using KalaWindow::Utils::PosTarget;
+using KalaWindow::Utils::RotTarget;
+using KalaWindow::Utils::SizeTarget;
 
 using std::string;
 using std::vector;
+using std::filesystem::path;
 using std::filesystem::current_path;
+using std::ostringstream;
 
 static void Redraw(Window* window);
 static void Resize(Window* window);
@@ -121,6 +136,14 @@ namespace Solin::Graphics
 				{.shaderData = string(shader_quad_vertex), .type = ShaderType::SHADER_VERTEX },
 				{.shaderData = string(shader_quad_fragment), .type = ShaderType::SHADER_FRAGMENT }
 			} });
+			
+		OpenGL_Shader* shader02 = OpenGL_Shader::CreateShader(
+			windowID,
+			"shader02",
+			{ {
+				{.shaderData = string(shader_text_vertex), .type = ShaderType::SHADER_VERTEX },
+				{.shaderData = string(shader_text_fragment), .type = ShaderType::SHADER_FRAGMENT }
+			} });
 
 		Image* image = Image::Initialize(
 			"img01",
@@ -130,6 +153,23 @@ namespace Solin::Graphics
 			vec2(256),
 			nullptr,
 			tex01,
+			shader01);
+			
+		path fontPath = current_path() / "files" / "fonts" / "bw.kfont";
+		
+		Font* font = Font::LoadFont("bitwise", fontPath.string());
+		u32 fontID = font->GetID();
+		
+		Text* text = Text::Initialize(
+			"bitwise_test",
+			windowID,
+			1,
+			fontID,
+			vec2(200.0f),
+			0.0f,
+			vec2(32.0f),
+			nullptr,
+			nullptr,
 			shader01);
 	}
 	
@@ -191,6 +231,19 @@ void Redraw(Window* window)
 				vec2(1.0f, 1.0f));
 
 			image->Render(projection);
+		}
+	}
+	
+	const vector<Text*>& text = Text::registry.GetAllWindowContent(windowID);
+	for (Text* t : text)
+	{
+		if (t)
+		{
+			t->MoveWidget(
+				window->GetClientRectSize(),
+				vec2(0.5f, 0.5f));
+
+			t->Render(projection);
 		}
 	}
 	glEnable(GL_CULL_FACE);
